@@ -8,13 +8,14 @@ from cryptography.fernet import Fernet
 
 #creates list of files of certain extensions within given folder
 def generate_file_list(path):
-    encrypted_ext = ('.txt','.pdf',)
+    encrypted_ext = ('.txt','.pdf','.docx','.doc','.png','.jpg','.jpeg')
     file_paths = []
     for root, dirs, files, in os.walk(path):
         for file in files:
             file_path,file_ext = os.path.splitext(root+'\\'+file)
             if file_ext in encrypted_ext:
                 file_paths.append(root+'\\'+file)
+    print(file_paths)
     return file_paths
 
 #creates fernet key and writes it to text file
@@ -117,7 +118,8 @@ def decrypt(file_paths):
 
 def main():
     #will need to get current working directory or something later
-    file_paths = generate_file_list('C:\\Users\\ericw\\Documents\\CECS378Test')
+    # file_paths = generate_file_list('C:\\Users\\ericw\\Documents\\CECS378Test')
+    file_paths = generate_file_list('C:\\Users\\bwiit\\Documents\\CECS378Test')
 
     # encrypt_keyword(file_paths, "a")
     # decrypt(file_paths)
