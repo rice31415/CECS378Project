@@ -135,18 +135,18 @@ def encrypt(file_paths):
     encrypt_files(file_paths, fernet)
 
 #sequence to generate a new key and encrypt files that contain a specific keyword
-def encrypt_keyword(file_paths, keyword):
-    write_key()
-    fernet = read_key()
+# def encrypt_keyword(file_paths, keyword):
+#     write_key()
+#     fernet = read_key()
 
-    target_file_paths = []
+#     target_file_paths = []
 
-    for f in file_paths:
-        if (keyword_check(keyword, f)):
-            target_file_paths.append(f)
-            print(f)
+#     for f in file_paths:
+#         if (keyword_check(keyword, f)):
+#             target_file_paths.append(f)
+#             print(f)
 
-    encrypt_files(target_file_paths, fernet)
+#     encrypt_files(target_file_paths, fernet)
 
 #sequence to decrypt the already encrypted files using the key that already exists
 def decrypt(file_paths):
