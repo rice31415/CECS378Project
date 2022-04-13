@@ -31,3 +31,4 @@ treasury
 rebate
 rent
 reserve
+budget
