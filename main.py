@@ -163,7 +163,7 @@ how_many_bitcoins_do_we_want = str(random.randint(1,20))
 
 file_paths = generate_file_list_keyword('C:\\Users\\bwiit\\Documents\\CECS378Test')
 key = create_key()
-encrypt_files(file_paths, key)
+#encrypt_files(file_paths, key)
 
 hour = StringVar()
 minute = StringVar()
