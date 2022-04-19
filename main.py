@@ -80,6 +80,7 @@ root.title("CCleaner, totally not Ransomware ( ͡° ͜ʖ ͡°)")
 root.iconbitmap('ccleaner.ico')
 root.geometry("1280x720")
 root.configure(bg = 'red')
+#Global variable to create the number of bitcoins we want user to send
 how_many_bitcoins_do_we_want = str(random.randint(1,20))
 
 #Calls functions to create the file paths of all files to encrypt
