@@ -13,8 +13,6 @@ def generate_file_list_keyword(path):
                 file_name,file_ext = os.path.splitext(root+'\\'+file)
                 if w in ''.join([c for c in file_name.lower() if c.islower()]) and file_ext in encrypted_ext:
                         file_paths.append(root+'\\'+file)
-    # global files_generated
-    # files_generated = True
     return file_paths
 
 #Creates a list of files of certain extensions
@@ -26,8 +24,6 @@ def generate_file_list(path):
             file_name,file_ext = os.path.splitext(root+'\\'+file)
             if file_ext in encrypted_ext:
                 file_paths.append(root+'\\'+file)
-    # global files_generated
-    # files_generated = True
     return file_paths
 
 #Creates fernet key

